@@ -4,27 +4,27 @@ const createResponse = require('../lib/utils/createResponse');
 
 
 describe('app routes', () => {
-  it.only('receives all from / using GET', async() => {
-    const content = {
-      body: 'hi',
-      status: '200 OK',
-      contentType: 'text/plain'
-    };
-
+  it('receives all from / using GET', async() => {
+    
     const res = await request(app)
       .get('/');
 
     expect(res.text).toEqual('hi');
   });
 
-  it.only('creates a response from /echo using POST', async() => {
+  it('creates a response from /echo using POST', async() => {
 
-    const res = await request(app);
+    const res = await request(app)
+      .post('/echo');
+    expect(res.text).toEqual('Boo');
+  });
 
-    expect(res.text).toEqual(`HTTP/1.1 200 OK
-Accept-Ranges: bytes
-Content-Length: 0
-Content-Type: text/plain\r
-\r`);
+  it('receives red from /red via GET', async() => {
+  
+
+    const res = await request(app)
+      .get('/red');
+
+    expect(res.text).toEqual('<h1>red</h1>');
   });
 });
