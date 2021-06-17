@@ -10,14 +10,16 @@ const promises = net.createServer(socket => {
     const request = parseRequest(data.toString());
 
     if(request.method === 'GET' && request.path === '/index.html') {
-      socket.write(createResponse({ body: '<h1>HOORAY YOU SOLVED THE LAB CONGRATULATIONS!!!!</h1>' }));
-      return fsPromises.readFile('./public/index.html', 'utf8')
-        .then(contents => createResponse(contents));
+      fsPromises.readFile('./public/index.html')
+        .then((contents) => fsPromises.writeFile('./public/index.html', contents)
+          .then(() => fsPromises.readFile('./public/index.html', 'utf8')))
+        .then((body) => socket.end(createResponse({ body })));
         
     } else {
       socket.end(createResponse({ body: 'Not Found', status: '404 Not Found', contentType: 'text/plain' }));
     }
   });
 });
-
+    
 module.exports = promises;
+
